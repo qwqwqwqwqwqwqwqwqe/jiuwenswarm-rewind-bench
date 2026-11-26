@@ -1,0 +1,16 @@
+/local/
+/vendor/
+/tmp/
+/results/
+/logs/
+/.venv/
+/.pytest_cache/
+__pycache__/
+*.pyc
+.env
+.env.*
+*.log
+*.zip
+*.whl
+*.tar
+*.tar.gz
