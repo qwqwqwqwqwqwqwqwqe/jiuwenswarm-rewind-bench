@@ -1,0 +1,2 @@
+[console_scripts]
+replay = replay.cli:main

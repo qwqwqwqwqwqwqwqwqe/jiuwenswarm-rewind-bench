@@ -1,5 +1,7 @@
 # 接入自己的 agent
 
+[English](custom-agent.en.md) · [首页](../README.md)
+
 可以先用同一验收器评测任意 agent 产物，再接入在线反馈。当前的 JiuwenSwarm 控制器使用该框架自己的 Request 和工具接口。修改 `JWS_MODEL_NAME` 将更换其模型，替换 agent 要实现启动适配层。
 
 ## 先跑离线验收

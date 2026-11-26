@@ -1,5 +1,7 @@
 # 实验记录
 
+[English](experiments.en.md) · [首页](../README.md)
+
 ## SWE-bench 探索
 
 早期 Luna6 批次用于调试回退工具、测试入口与官方评测反馈。后来三个可执行的 DS1017 样本中，Continue、Restart、Rewind 分别通过 3、3、2 个，Rewind 臂没有实际回退。这组小样本中，代码修复通常可继续在当前工作区完成。模型、样本和实现版本均有变化，结论限于所测配置。

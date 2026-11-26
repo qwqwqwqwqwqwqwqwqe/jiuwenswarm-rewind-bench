@@ -1,0 +1,17 @@
+{
+  "openjiuwen": {
+    "files": 3093,
+    "python": 2749,
+    "asset_or_build_output": 1
+  },
+  "replay_agent_recorder": {
+    "files": 67,
+    "python": 60,
+    "asset_or_build_output": 1
+  },
+  "workswarm": {
+    "files": 2287,
+    "python": 1912,
+    "asset_or_build_output": 285
+  }
+}

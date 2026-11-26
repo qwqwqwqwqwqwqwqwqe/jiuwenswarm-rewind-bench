@@ -1,5 +1,7 @@
 # 从干净 clone 开始
 
+[English](setup.en.md) · [首页](../README.md)
+
 ## 系统与模型
 
 使用 Linux x86-64 或 WSL2。准备 Python 3.12、Conda、Docker、Git、curl 和可供容器访问的 OpenAI 兼容 Chat Completions 服务。WSL 建议 clone 到 Linux 文件系统，以便保留工作区内的执行位、符号链接和 Git 元数据。

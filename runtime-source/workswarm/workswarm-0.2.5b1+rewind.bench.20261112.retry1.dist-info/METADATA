@@ -1,0 +1,143 @@
+Metadata-Version: 2.4
+Name: workswarm
+Version: 0.2.5b1+rewind.bench.20261112.retry1
+Summary: WorkSwarm
+License: Apache-2.0
+Classifier: License :: OSI Approved :: Apache Software License
+Requires-Python: <3.15,>=3.11
+License-File: LICENSE
+License-File: OPEN_SOURCE_SOFTWARE_NOTICE.md
+Requires-Dist: a2ui-agent-sdk==0.2.1
+Requires-Dist: minio<8,>=7.2
+Requires-Dist: a4p @ git+https://gitcode.com/openJiuwen/agent-protocol.git@agent-protocol-V0.2.0#subdirectory=A4P
+Requires-Dist: chromadb<2,>=1.5.0
+Requires-Dist: ruamel.yaml<0.20,>=0.18.0
+Requires-Dist: lark-oapi<2,>=1.5.3
+Requires-Dist: loguru<0.8,>=0.7.3
+Requires-Dist: openjiuwen==0.1.20+rewind.bench.20261110
+Requires-Dist: JiuwenMemory>=0.2.0
+Requires-Dist: filelock<4,>=3.25.0
+Requires-Dist: openjiuwen-protocol @ git+https://gitcode.com/openJiuwen/agent-protocol.git@5201ca863692a47ad9b5b689bd7b7679ffd74167#subdirectory=openjiuwen-protocol
+Requires-Dist: pgvector<0.5,>=0.4.2
+Requires-Dist: portalocker<4,>=3.2.0
+Requires-Dist: prompt-toolkit<4.0,>=3.0
+Requires-Dist: websockets<16,>=12.0
+Requires-Dist: psutil<8,>=7.2.2
+Requires-Dist: aiosqlite<0.23,>=0.22.1
+Requires-Dist: asyncpg<1,>=0.29
+Requires-Dist: croniter<7,>=3.0.0
+Requires-Dist: python-telegram-bot<23,>=20.0
+Requires-Dist: discord.py<3,>=2.4.0
+Requires-Dist: slack-bolt<2,>=1.30.0
+Requires-Dist: dingtalk-stream<0.25,>=0.24.3
+Requires-Dist: wecom-aibot-sdk<2,>=1.0.5
+Requires-Dist: python-socks<3,>=2.8.1
+Requires-Dist: greenlet<4,>=3.3.2
+Requires-Dist: skillnet-ai==0.0.16
+Requires-Dist: mutagen<2,>=1.47.0
+Requires-Dist: google-genai<2,>=1.68.0
+Requires-Dist: google-api-core<2.36,>=1.26
+Requires-Dist: google-adk<2.2,>=1.28.0
+Requires-Dist: fastmcp<3.4.1,>=2.14.2
+Requires-Dist: mcp<2,>=1.28.1
+Requires-Dist: protobuf<7,>=5.29.5
+Requires-Dist: starlette<1,>=0.49.1
+Requires-Dist: anthropic<1.0.0,>=0.40.0
+Requires-Dist: opentelemetry-api<1.42,>=1.28.0
+Requires-Dist: opentelemetry-sdk<1.42,>=1.28.0
+Requires-Dist: opentelemetry-exporter-otlp-proto-grpc<1.42,>=1.28.0
+Requires-Dist: opentelemetry-exporter-otlp-proto-http<1.42,>=1.28.0
+Requires-Dist: sqlite-vec==0.1.6
+Requires-Dist: fastapi<1.0,>=0.115
+Requires-Dist: uvicorn[standard]<1.0,>=0.30
+Requires-Dist: python-multipart<0.1,>=0.0.31
+Requires-Dist: lxml<7,>=6.1.0
+Requires-Dist: pillow<13,>=12.2.0
+Requires-Dist: pydantic<3.0,>=2.0
+Requires-Dist: pyyaml<7,>=6.0
+Requires-Dist: httpx[http2,socks]<1.0,>=0.27
+Requires-Dist: certifi<2027,>=2024.8.30
+Requires-Dist: json-repair<0.60,>=0.30.0
+Requires-Dist: jsonschema<5,>=4.20
+Requires-Dist: gitcode-api<2,>=1.2.20
+Requires-Dist: faiss-cpu<2,>=1.7.0
+Requires-Dist: numpy<3,>=1.24.0
+Requires-Dist: tree-sitter<0.26.0,>=0.25.0
+Requires-Dist: tree-sitter-bash<0.26.0,>=0.25.0
+Requires-Dist: playwright<2,>=1.40
+Requires-Dist: tiktoken<0.13,>=0.12.0
+Requires-Dist: uv<0.13,>=0.4.0
+Requires-Dist: gitcode-cli==0.12.0
+Requires-Dist: imageio-ffmpeg<1,>=0.5.1
+Requires-Dist: openjiuwen-runtime-foundation @ git+https://gitcode.com/openJiuwen/agent-runtime.git@develop#subdirectory=foundation
+Provides-Extra: rewind
+Requires-Dist: replay-agent-recorder==1.0.0a1+rewind.20261112.escape1; (python_version >= "3.12" and sys_platform == "linux") and extra == "rewind"
+Provides-Extra: harmony
+Requires-Dist: a2ui-agent-sdk==0.2.1; extra == "harmony"
+Requires-Dist: ruamel.yaml>=0.18.0; extra == "harmony"
+Requires-Dist: lark-oapi>=1.5.3; extra == "harmony"
+Requires-Dist: loguru>=0.7.3; extra == "harmony"
+Requires-Dist: openjiuwen==0.1.20+rewind.bench.20261110; extra == "harmony"
+Requires-Dist: filelock<4,>=3.25.0; extra == "harmony"
+Requires-Dist: pgvector>=0.4.2; extra == "harmony"
+Requires-Dist: portalocker>=3.2.0; extra == "harmony"
+Requires-Dist: aiosqlite>=0.22.1; extra == "harmony"
+Requires-Dist: croniter>=3.0.0; extra == "harmony"
+Requires-Dist: python-telegram-bot>=20.0; extra == "harmony"
+Requires-Dist: discord.py>=2.4.0; extra == "harmony"
+Requires-Dist: slack-bolt>=1.30.0; extra == "harmony"
+Requires-Dist: dingtalk-stream>=0.24.3; extra == "harmony"
+Requires-Dist: wecom-aibot-sdk>=1.0.5; extra == "harmony"
+Requires-Dist: python-socks>=2.8.1; extra == "harmony"
+Requires-Dist: greenlet>=3.3.2; extra == "harmony"
+Requires-Dist: skillnet-ai==0.0.16; extra == "harmony"
+Requires-Dist: mutagen>=1.47.0; extra == "harmony"
+Requires-Dist: google-genai>=1.68.0; extra == "harmony"
+Requires-Dist: opentelemetry-api>=1.28.0; extra == "harmony"
+Requires-Dist: opentelemetry-sdk>=1.28.0; extra == "harmony"
+Requires-Dist: opentelemetry-exporter-otlp-proto-grpc>=1.28.0; extra == "harmony"
+Requires-Dist: opentelemetry-exporter-otlp-proto-http>=1.28.0; extra == "harmony"
+Requires-Dist: fastapi>=0.115; extra == "harmony"
+Requires-Dist: uvicorn[standard]>=0.30; extra == "harmony"
+Requires-Dist: httptools>=0.6.3; extra == "harmony"
+Requires-Dist: python-multipart>=0.0.31; extra == "harmony"
+Requires-Dist: lxml>=6.1.0; extra == "harmony"
+Requires-Dist: pillow>=12.2.0; extra == "harmony"
+Requires-Dist: pydantic>=2.0; extra == "harmony"
+Requires-Dist: pyyaml>=6.0; extra == "harmony"
+Requires-Dist: httpx[socks]>=0.27; extra == "harmony"
+Requires-Dist: json-repair>=0.30.0; extra == "harmony"
+Requires-Dist: jsonschema<5,>=4.20; extra == "harmony"
+Requires-Dist: gitcode-api>=1.2.20; extra == "harmony"
+Provides-Extra: a2a
+Requires-Dist: a2a-sdk[http-server]==1.0.0; extra == "a2a"
+Provides-Extra: ssh
+Requires-Dist: asyncssh<2.24,>=2.14.0; extra == "ssh"
+Provides-Extra: desktop
+Requires-Dist: pywebview<7,>=5.4; extra == "desktop"
+Provides-Extra: dev
+Requires-Dist: pyinstaller>=6.0.0; extra == "dev"
+Requires-Dist: pywebview<7,>=5.4; extra == "dev"
+Provides-Extra: tui
+Requires-Dist: workswarm-tui==0.2.5.beta1; extra == "tui"
+Provides-Extra: distribute
+Requires-Dist: openjiuwen[postgres,zmq]; extra == "distribute"
+Provides-Extra: claude
+Requires-Dist: openjiuwen[claude]; extra == "claude"
+Provides-Extra: codex
+Requires-Dist: openjiuwen[codex]; extra == "codex"
+Provides-Extra: cua
+Requires-Dist: openjiuwen[cua]; extra == "cua"
+Provides-Extra: shell-ast
+Provides-Extra: test
+Requires-Dist: a2a-sdk[http-server]==1.0.0; extra == "test"
+Requires-Dist: cryptography>=44.0.0; extra == "test"
+Requires-Dist: asyncssh<2.24,>=2.14.0; extra == "test"
+Requires-Dist: pytest>=8.3.5; extra == "test"
+Requires-Dist: pytest-asyncio>=1.0.0; extra == "test"
+Requires-Dist: pytest-html>=4.1.1; extra == "test"
+Requires-Dist: pytest-mock>=3.14.0; extra == "test"
+Requires-Dist: pytest-cov>=7.0.0; extra == "test"
+Requires-Dist: coverage>=7.7.1; extra == "test"
+Requires-Dist: pyyaml>=6.0; extra == "test"
+Dynamic: license-file
