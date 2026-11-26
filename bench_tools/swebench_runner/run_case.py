@@ -427,7 +427,7 @@ def start_agent_container(
     *,
     image: str,
     container_name: str,
-    backend_root: Path,
+    backend_root: Path | None,
     jiuwen_port: int,
     validation_gate: bool = False,
     network: str | None = None,
@@ -452,12 +452,11 @@ def start_agent_container(
         # 容器内也需要在该路径访问 runtime。
         "-v", f"{layout.runtime}:{layout.runtime}:ro",
         "-v", f"{layout.shared}:/shared:rw",
-        "-v", f"{backend_root / 'runners'}:/benchrunner-backend/runners:ro",
-        "-v", f"{backend_root / 'llm_forward'}:/benchrunner-backend/llm_forward:ro",
-        "-v", f"{backend_root / 'utils'}:/benchrunner-backend/utils:ro",
-        "-v", f"{backend_root / 'schemas'}:/benchrunner-backend/schemas:ro",
-        image, "/bin/sleep", "infinity",
     ]
+    if backend_root is not None:
+        for directory in ("runners", "llm_forward", "utils", "schemas"):
+            command.extend(["-v", f"{backend_root / directory}:/benchrunner-backend/{directory}:ro"])
+    command.extend([image, "/bin/sleep", "infinity"])
     if validation_gate:
         command[2:2] = ["-e", "JWS_REPRODUCTION_GATE=1"]
     result = run_command(command, timeout=300)

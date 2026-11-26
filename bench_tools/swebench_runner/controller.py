@@ -97,7 +97,9 @@ def run_episode(args,layout,case_id,strategy):
     atomic(out/'run.json',summary)
     try:
         image='swebench/sweb.eval.x86_64.'+case_id.replace('__','_1776_',1)+':latest'
-        start_agent_container(layout,image=image,container_name=container,backend_root=Path(args.backend_root),
+        legacy_backend=getattr(args,'backend_root',None)
+        start_agent_container(layout,image=image,container_name=container,
+                              backend_root=Path(legacy_backend) if legacy_backend else None,
                               jiuwen_port=28092,validation_gate=False,
                               network=getattr(args,'egress_network',None))
         begun=True;preflight_container(container)
@@ -255,7 +257,8 @@ def main():
     p.add_argument('--root',required=True);p.add_argument('--runtime-source',required=True)
     p.add_argument('--env-file',required=True);p.add_argument('--output-root',required=True)
     p.add_argument('--cases-file',required=True);p.add_argument('--select',required=True)
-    p.add_argument('--dataset',required=True);p.add_argument('--backend-root',required=True)
+    p.add_argument('--dataset',required=True)
+    p.add_argument('--backend-root',help='Optional legacy BenchRunner driver mounts')
     p.add_argument('--strategies',default='continue,restart,rewind')
     p.add_argument('--workers',type=int,default=1);p.add_argument('--max-submissions',type=int,default=10)
     p.add_argument('--token-limit',type=int,default=500000);p.add_argument('--timeout',type=int,default=3600)

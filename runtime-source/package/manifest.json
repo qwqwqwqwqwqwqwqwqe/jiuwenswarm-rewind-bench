@@ -1,0 +1,61 @@
+{
+  "built_at": "2026-11-12T09:38:55.855487+00:00",
+  "target": "Linux Python 3.12; prepared Agent runtime",
+  "source_repositories": {
+    "jiuwenswarm": {
+      "commit": "8b0eddd8dd5daa902a308ded4722d3b0c68a21a0",
+      "source_version": "0.2.5.beta1",
+      "distribution_version": "0.2.5b1+rewind.bench.20261112.retry1",
+      "source_files": 4585,
+      "includes_uncommitted_changes": true
+    },
+    "agent-core": {
+      "commit": "0552cbde7ad263eaa3efc39a6451371fe6dccc6d",
+      "source_version": "0.1.20",
+      "distribution_version": "0.1.20+rewind.bench.20261110",
+      "source_files": 3170,
+      "includes_uncommitted_changes": false
+    },
+    "replay-agent-recorder": {
+      "commit": "6661046e2b30fcf5f17c93d51acb56babdea8c53",
+      "source_version": "1.0.0-alpha.1",
+      "distribution_version": "1.0.0a1+rewind.20261112.escape1",
+      "source_files": 123,
+      "includes_uncommitted_changes": true
+    }
+  },
+  "wheels": [
+    {
+      "file": "wheels/openjiuwen-0.1.20+rewind.bench.20261110-py3-none-any.whl",
+      "name": "openjiuwen",
+      "version": "0.1.20+rewind.bench.20261110",
+      "sha256": "dd6bf4fbac7606f2d330771d6eb5590b1d065fcb323e4cd7f34ffbf77ba44e0c",
+      "bytes": 8774133
+    },
+    {
+      "file": "wheels/replay_agent_recorder-1.0.0a1+rewind.20261112.escape1-py3-none-any.whl",
+      "name": "replay-agent-recorder",
+      "version": "1.0.0a1+rewind.20261112.escape1",
+      "sha256": "e310573ebdf547a381310d64796063a0d22f6a03fbc905b3a52139234ae2c6e5",
+      "bytes": 390715
+    },
+    {
+      "file": "wheels/workswarm-0.2.5b1+rewind.bench.20261112.retry1-py3-none-any.whl",
+      "name": "workswarm",
+      "version": "0.2.5b1+rewind.bench.20261112.retry1",
+      "sha256": "1ae8e46a81eaf3225eb35f6fbd08fcb8b1d0e300acd4d2f300a3fc565f6fa787",
+      "bytes": 35770402
+    }
+  ],
+  "packaging_overrides": [
+    "Local rewind versions for workswarm/openjiuwen; exact patched core dependency",
+    "Replay extra references bundled recorder release instead of a Git URL",
+    "Source checkouts remain unchanged; existing verified frontend dist reused"
+  ],
+  "limitations": [
+    "Requires bundled driver patch plus rewind-bench.json; 50-case official evaluation not performed",
+    "Runtime dependencies and task Docker images are not bundled"
+  ],
+  "driver_base_commit": "0d87f2b1986c0d90385bf7182fc1dc595a10b5aa",
+  "integration": "Original AgentServer chat_send; in-container attempts; no nested Docker"
+}

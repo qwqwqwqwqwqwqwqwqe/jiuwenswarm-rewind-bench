@@ -1,0 +1,33 @@
+diff --git a/benchrunner-backend/runners/agents/_jiuwen_driver.py b/benchrunner-backend/runners/agents/_jiuwen_driver.py
+index 22fbf6c9..938a6ba3 100644
+--- a/benchrunner-backend/runners/agents/_jiuwen_driver.py
++++ b/benchrunner-backend/runners/agents/_jiuwen_driver.py
+@@ -677,9 +677,17 @@ def run_driver(params):
+                     """
+                     if system_prompt:
+                         send_prompt = f"{system_prompt.strip()}\n\n---\n\n{send_prompt}"
++                    send_extra = dict(extra)
++                    rewind_config = Path(sys.prefix) / "rewind-bench.json"
++                    if rewind_config.exists():
++                        if session_prompts:
++                            raise ValueError("Rewind benchmark currently supports one task session")
++                        from jiuwenswarm.rewind.bench_config import load_driver_options
++
++                        send_extra["rewind"] = load_driver_options(Path(sys.prefix), per_timeout)
+                     chunks = await client.chat_send(
+                         session_id=sid, text=send_prompt, stream=True,
+-                        mode=mode, extra_params=extra or None)
++                        mode=mode, extra_params=send_extra or None)
+                     answer_parts = []
+                     transcript_parts = []
+                     done = False
+@@ -731,6 +739,9 @@ def run_driver(params):
+                         await asyncio.wait_for(_consume(), timeout=per_timeout)
+                     except asyncio.TimeoutError:
+                         logger.warning("对话超时 (%ss), 取已收内容", per_timeout)
++                        if "rewind" in send_extra:
++                            await asyncio.wait_for(client.call(
++                                "chat.interrupt", {"wait_for_stop": True}, session_id=sid), timeout=30)
+                     return "\n".join(transcript_parts) or "".join(answer_parts), done
+ 
+                 base_sid = await _create_session(session_id)

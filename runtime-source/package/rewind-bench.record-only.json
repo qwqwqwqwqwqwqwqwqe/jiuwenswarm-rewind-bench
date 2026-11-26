@@ -1,0 +1,11 @@
+{
+  "schema": "jiuwenswarm.rewind.bench.v1",
+  "profile": "single-agent-code-v1",
+  "mode": "record-only",
+  "token_limit": 2000000,
+  "max_rewinds": 3,
+  "model_max_retries": 12,
+  "model_call_timeout_seconds": 600,
+  "model_retry_initial_delay_seconds": 15,
+  "model_retry_max_delay_seconds": 120
+}
