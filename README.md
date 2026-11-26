@@ -1,7 +1,7 @@
 # JiuwenSwarm Rewind Bench
 
 <p align="center">
-  <img src="docs/assets/project-banner.png" alt="JiuwenSwarm Rewind Bench" width="780" />
+  <img src="docs/assets/project-banner.png" alt="JiuwenSwarm Rewind Bench" width="440" />
 </p>
 
 <p align="center">
