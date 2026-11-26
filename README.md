@@ -1,6 +1,21 @@
 # JiuwenSwarm Rewind Bench
 
-[English README](README.en.md) · [完整运行时源码](runtime-source/)
+<p align="center">
+  <img src="docs/assets/project-banner.png" alt="JiuwenSwarm Rewind Bench" width="780" />
+</p>
+
+<p align="center">
+  <a href="docs/setup.md">配置指南</a>
+  · <a href="README.en.md">English README</a>
+  · <a href="https://github.com/qwqwqwqwqwqwqwqwqe/jiuwenswarm-rewind-bench/releases/tag/runtime-20261112-173855">运行时 ZIP</a>
+</p>
+
+<p align="center">
+  <a href="docs/setup.md"><img src="https://img.shields.io/badge/Python-3.12-465CAB" alt="Python 3.12" /></a>
+  <a href="docs/setup.md"><img src="https://img.shields.io/badge/Platform-Linux%20%2F%20WSL2-53617E" alt="Linux / WSL2" /></a>
+  <a href="https://github.com/SWE-bench/SWE-bench"><img src="https://img.shields.io/badge/Benchmark-SWE--bench-AA6236" alt="SWE-bench" /></a>
+  <a href="https://github.com/Kelvin-Coffee/MettleBench"><img src="https://img.shields.io/badge/Benchmark-MettleBench-187F70" alt="MettleBench" /></a>
+</p>
 
 将官方验收反馈接入 JiuwenSwarm，对比 Continue 原地修复、Restart 带失败反馈重启和 Rewind 检查点回退。SWE-bench 验收 Git 补丁，MettleBench 验收完整任务工作区。
 
@@ -36,21 +51,7 @@ jiuwenswarm-rewind-bench/
 
 ## 项目架构
 
-```mermaid
-flowchart LR
-    User["CLI / experiment settings"] --> Host["Host strategy controller"]
-    Data["Task image and benchmark data"] --> Agent
-    Host -->|"fresh task, failure endpoint, or restart"| Agent["Isolated agent container<br/>JiuwenSwarm + model tools"]
-    Agent -->|"submission request"| Host
-    Host -->|"Git diff"| SWE["SWE-bench harness"]
-    Host -->|"full workspace snapshot"| MB["MettleBench verifier"]
-    SWE -->|"official verdict"| Host
-    MB -->|"official verdict"| Host
-    Host -->|"first failed item / success"| Agent
-    Agent -->|"LLM and tool trace, checkpoints"| Store["Recovery store"]
-    Store -->|"restore state + replay"| Agent
-    Host --> Results["Official reports, costs, pair audits"]
-```
+![宿主控制器、隔离 Agent、回退记录库及两套官方验收器的关系](docs/assets/evaluation-architecture.png)
 
 宿主控制器负责收集交付物并调度官方验收。Agent 在独立容器运行，恢复轨迹与验收报告分别记录，便于核对各分支的动作和结果。
 

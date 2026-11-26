@@ -1,6 +1,21 @@
 # JiuwenSwarm Rewind Bench
 
-[中文 README](README.md)
+<p align="center">
+  <img src="docs/assets/project-banner.png" alt="JiuwenSwarm Rewind Bench" width="780" />
+</p>
+
+<p align="center">
+  <a href="docs/setup.en.md">Setup guide</a>
+  · <a href="README.md">中文 README</a>
+  · <a href="https://github.com/qwqwqwqwqwqwqwqwqe/jiuwenswarm-rewind-bench/releases/tag/runtime-20261112-173855">Runtime ZIP</a>
+</p>
+
+<p align="center">
+  <a href="docs/setup.en.md"><img src="https://img.shields.io/badge/Python-3.12-465CAB" alt="Python 3.12" /></a>
+  <a href="docs/setup.en.md"><img src="https://img.shields.io/badge/Platform-Linux%20%2F%20WSL2-53617E" alt="Linux / WSL2" /></a>
+  <a href="https://github.com/SWE-bench/SWE-bench"><img src="https://img.shields.io/badge/Benchmark-SWE--bench-AA6236" alt="SWE-bench" /></a>
+  <a href="https://github.com/Kelvin-Coffee/MettleBench"><img src="https://img.shields.io/badge/Benchmark-MettleBench-187F70" alt="MettleBench" /></a>
+</p>
 
 This project feeds official benchmark verdicts back to JiuwenSwarm and compares three response strategies: Continue repairs in place, Restart starts over with failure feedback, and Rewind restores an earlier decision point. SWE-bench evaluates a Git patch; MettleBench evaluates the submitted workspace.
 
@@ -35,21 +50,7 @@ jiuwenswarm-rewind-bench/
 
 ## System architecture
 
-```mermaid
-flowchart LR
-    User["CLI / experiment settings"] --> Host["Host strategy controller"]
-    Data["Task image and benchmark data"] --> Agent
-    Host -->|"fresh task, failure endpoint, or restart"| Agent["Isolated agent container<br/>JiuwenSwarm + model tools"]
-    Agent -->|"submission request"| Host
-    Host -->|"Git diff"| SWE["SWE-bench harness"]
-    Host -->|"full workspace snapshot"| MB["MettleBench verifier"]
-    SWE -->|"official verdict"| Host
-    MB -->|"official verdict"| Host
-    Host -->|"first failed item / success"| Agent
-    Agent -->|"LLM and tool trace, checkpoints"| Store["Recovery store"]
-    Store -->|"restore state + replay"| Agent
-    Host --> Results["Official reports, costs, pair audits"]
-```
+![Host controller, isolated agent, replay store and two official evaluators](docs/assets/evaluation-architecture.png)
 
 The host controls submission capture and official scoring. The agent works in a separate container. The score reports, recovery artifacts, and model cost are recorded separately so they can be compared per strategy.
 

@@ -4,19 +4,7 @@
 
 ## JiuwenSwarm 组件图
 
-```mermaid
-flowchart TB
-    Legacy["Standard channels / legacy driver"] --> Service["JiuwenSwarm AgentRuntime"]
-    Bench["Benchmark agent_entry.py"] --> Chat["Rewind chat supervisor"]
-    Chat --> Attempt["Isolated attempt worker"]
-    Attempt -->|"AgentRequest + host tools"| Service
-    Service --> Adapter["server/runtime/agent_adapter<br/>Agent and mode adapters"]
-    Adapter --> Core["openJiuwen agent-core<br/>Agent loop, model, tools, execution scope"]
-    Core --> Model["Model endpoint"]
-    Core --> Tools["Workspace tools and submit_patch"]
-    Core <-->|"model / tool boundaries"| Trace["AttemptBoundaries + Replay"]
-    Trace --> Store["Traces and workspace snapshots"]
-```
+![JiuwenSwarm 主管进程、AgentRuntime、agent-core 和 Replay 组件架构](assets/jiuwenswarm-components.png)
 
 - `agent_entry.py` 把实验参数转成 AgentRequest，回退 supervisor 管理尝试进程。
 - `AgentRuntime` 通过 [agent_adapter](../runtime-source/workswarm/jiuwenswarm/server/runtime/agent_adapter/) 连接不同 Agent 模式。`interface_deep.py` 是其中一个实现。
@@ -24,35 +12,7 @@ flowchart TB
 
 ## 提交、反馈与恢复顺序图
 
-```mermaid
-sequenceDiagram
-    participant H as Host controller
-    participant J as JiuwenSwarm supervisor
-    participant A as Agent attempt
-    participant S as Replay store
-    participant V as Official verifier
-    H->>J: Start a strategy and deliver the task
-    J->>A: Construct AgentRequest and tools
-    loop Live reasoning and tools
-        A->>S: Record aligned decisions, results, and checkpoints
-    end
-    A->>H: submit_patch requests evaluation
-    H->>V: Evaluate a patch or workspace copy
-    V-->>H: Official verdict
-    H-->>A: Return failure feedback or acceptance
-    alt Continue
-        A->>A: Keep context and workspace, repair in place
-    else Restart
-        J->>H: Request pristine workspace
-        H-->>J: Workspace restored
-        J->>A: Start a fresh attempt with failure feedback
-    else Rewind selected
-        A->>S: Query candidates and request a checkpoint
-        A->>J: Return accepted rewind control
-        J->>S: Restore state and prepare prefix replay
-        J->>A: Resume at target with operational memory
-    end
-```
+![提交、官方反馈以及 Continue、Restart、Rewind 三种恢复分支的顺序](assets/recovery-sequence.png)
 
 Continue 保留当前上下文。Restart 恢复初始工作区并用新会话处理失败反馈。Rewind 由模型选择较早决策，恢复工作区并重放历史结果，到目标点才重新调用模型。
 

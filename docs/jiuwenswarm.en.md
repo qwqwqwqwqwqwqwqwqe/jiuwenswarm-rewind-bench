@@ -4,19 +4,7 @@
 
 ## Components
 
-```mermaid
-flowchart TB
-    Legacy["Standard channels / legacy driver"] --> Service["JiuwenSwarm AgentRuntime"]
-    Bench["Benchmark agent_entry.py"] --> Chat["Rewind chat supervisor"]
-    Chat --> Attempt["Isolated attempt worker"]
-    Attempt -->|"AgentRequest + host tools"| Service
-    Service --> Adapter["server/runtime/agent_adapter<br/>Agent and mode adapters"]
-    Adapter --> Core["openJiuwen agent-core<br/>Agent loop, model, tools, execution scope"]
-    Core --> Model["Model endpoint"]
-    Core --> Tools["Workspace tools and submit_patch"]
-    Core <-->|"model / tool boundaries"| Trace["AttemptBoundaries + Replay"]
-    Trace --> Store["Traces and workspace snapshots"]
-```
+![Components from the Rewind supervisor to the agent and Replay store](assets/jiuwenswarm-components.png)
 
 - `agent_entry.py` owns the benchmark episode and translates settings into an AgentRequest. The Rewind supervisor starts and fences attempt processes.
 - `AgentRuntime` manages the agent request. The [agent adapters](../runtime-source/workswarm/jiuwenswarm/server/runtime/agent_adapter/) connect the runtime to particular agent modes. `interface_deep.py` is one implementation in that directory.
@@ -25,35 +13,7 @@ flowchart TB
 
 ## Sequence after official evaluation
 
-```mermaid
-sequenceDiagram
-    participant H as Host controller
-    participant J as JiuwenSwarm supervisor
-    participant A as Agent attempt
-    participant S as Replay store
-    participant V as Official verifier
-    H->>J: Start a strategy and deliver the task
-    J->>A: Construct AgentRequest and tools
-    loop Live reasoning and tools
-        A->>S: Record aligned decisions, results, and checkpoints
-    end
-    A->>H: submit_patch requests evaluation
-    H->>V: Evaluate a patch or workspace copy
-    V-->>H: Official verdict
-    H-->>A: Return failure feedback or acceptance
-    alt Continue
-        A->>A: Keep context and workspace, repair in place
-    else Restart
-        J->>H: Request pristine workspace
-        H-->>J: Workspace restored
-        J->>A: Start a fresh attempt with failure feedback
-    else Rewind selected
-        A->>S: Query candidates and request a checkpoint
-        A->>J: Return accepted rewind control
-        J->>S: Restore state and prepare prefix replay
-        J->>A: Resume at target with operational memory
-    end
-```
+![Submission sequence and Continue, Restart and Rewind branches](assets/recovery-sequence.png)
 
 Continue and Rewind both receive the first failed criterion. A rewind only happens after a model-selected checkpoint is accepted. Strict replay uses recorded responses and results instead of rerunning old side-effecting commands.
 
