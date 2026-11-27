@@ -31,7 +31,60 @@ def patch(text,old,new):
     if text.count(old)!=1:raise ValueError('Patch anchor mismatch: '+old[:100])
     return text.replace(old,new,1)
 
-def install():
+def patch_semantic_runtime(sp):
+    boundaries=sp/'jiuwenswarm/rewind/boundaries.py'
+    attempt=sp/'jiuwenswarm/rewind/attempt.py'
+    native=sp/'jiuwenswarm/rewind/native.py'
+    sources={path:path.read_text() for path in (boundaries,attempt,native)}
+    source=sources[boundaries]
+    source=patch(source,'        self.verify_prefix("llm", record_kwargs)',
+        '        if getattr(self, "semantic_candidates", None) is not None and (not self._prefix_records or self._fork_live):\n'
+        '            from feedback_runner.semantic_candidates import observe\n'
+        '            observe(self, seal=True)\n'
+        '        self.verify_prefix("llm", record_kwargs)')
+    anchor='            if os.environ.get("JWS_PAIRED") == "1":\n                from feedback_runner.paired_support import observe_live'
+    source=patch(source,anchor,
+        '            if overridden is not None and getattr(self, "semantic_candidates", None) is not None:\n'
+        '                from feedback_runner.semantic_candidates import observe\n'
+        '                observe(self)\n'+anchor)
+    source=patch(source,'        candidates = backtrack_candidates(reason=reason, limit=80)',
+        '        index = getattr(self, "semantic_candidates", None)\n'
+        '        limit = int(os.environ.get("JWS_CANDIDATE_LIMIT", "80"))\n'
+        '        candidates = backtrack_candidates(reason=reason, limit=None if index is not None else limit)\n'
+        '        if index is not None:\n'
+        '            from replay.backtrack import remember_last_backtrack_candidates, resolve_current_trace\n'
+        '            candidates = index.select(candidates)\n'
+        '            run_id, log_dir = resolve_current_trace()\n'
+        '            remember_last_backtrack_candidates(candidates, run_id=run_id, log_dir=log_dir)\n'
+        '        elif os.environ.get("JWS_PAPER_RECOVERY") == "1":\n'
+        '            from feedback_runner.semantic_candidates import log_recent_query\n'
+        '            log_recent_query(self.session, candidates)')
+    sources[boundaries]=source
+    sources[attempt]=patch(sources[attempt],
+        '        control, output = await run_scoped(lambda: agent_run(job, boundaries, fd), boundaries)',
+        '        if job.get("candidate_policy") == "semantic":\n'
+        '            from feedback_runner.semantic_candidates import from_job\n'
+        '            boundaries.semantic_candidates = from_job(job)\n'
+        '        try:\n'
+        '            control, output = await run_scoped(lambda: agent_run(job, boundaries, fd), boundaries)\n'
+        '        finally:\n'
+        '            index = getattr(boundaries, "semantic_candidates", None)\n'
+        '            if index is not None:\n'
+        '                from feedback_runner.semantic_candidates import observe\n'
+        '                observe(boundaries, seal=True)\n'
+        '                await index.close()')
+    sources[native]=patch(sources[native],
+        '                result = boundaries.candidates(**inputs)',
+        '                if getattr(boundaries, "semantic_candidates", None) is not None:\n'
+        '                    from feedback_runner.semantic_candidates import before_query\n'
+        '                    await before_query(boundaries)\n'
+        '                result = boundaries.candidates(**inputs)')
+    for path,source in sources.items():
+        ast.parse(source)
+        path.write_text(source,encoding='utf-8')
+    return list(sources)
+
+def install(*, semantic=False):
     from bench_tools.jiuwenswarm_runtime.install_runtime import install as overlay
     runtime=BASE/'runtime';runtime.parent.mkdir(parents=True,exist_ok=True)
     if runtime.exists():raise ValueError('Dedicated runtime exists; do not overwrite a running experiment')
@@ -44,8 +97,11 @@ def install():
     s=patch(s,'candidates = backtrack_candidates(reason=reason)',
         'candidates = backtrack_candidates(reason=reason, limit=80)')
     s=patch(s,'request = {**request, **self.model_parameters}',
-        'request = {**request, **self.model_parameters, "temperature": 0.0}')
+        'request = {**request, **self.model_parameters}\n'
+        '        if os.environ.get("JWS_ARCHIVED_MODEL_DEFAULTS") != "1":\n'
+        '            request["temperature"] = 0.0')
     ast.parse(s);p.write_text(s)
+    semantic_files=patch_semantic_runtime(sp) if semantic else []
     p=sp/'replay/backtrack.py';s=p.read_text()
     # Lexical bans conflate "cannot repair the damaged branch" with "task
     # impossible". The paper pilot keeps nonempty/schema/duplicate validation
@@ -56,9 +112,9 @@ def install():
     from bench_tools.mettlebench.recovery_experiment import sha
     atomic(runtime/'paper-recovery-overlay.json',{'version':2,'temperature':0,'candidate_limit':80,
         'historical_prefix_candidates':True,'lexical_memory_veto':False,
-        'historical_stagnation_terminal_suppressed':True,
+        'historical_stagnation_terminal_suppressed':True,'semantic_candidates':semantic,
         'files':{str(p.relative_to(sp)):sha(p) for p in [sp/'replay/backtrack.py',
-            sp/'jiuwenswarm/rewind/boundaries.py',sp/'jiuwenswarm/rewind/eval_feedback.py']}})
+            sp/'jiuwenswarm/rewind/boundaries.py',sp/'jiuwenswarm/rewind/eval_feedback.py',*semantic_files]}})
     print('INSTALLED',runtime,flush=True)
 
 def repeat_strategies(repetition, task_index):
@@ -96,8 +152,9 @@ def main():
     cohort.add_argument('--expansion',action='store_true',help='Run the second, nine-task recovery cohort')
     cohort.add_argument('--restart-from',type=Path,help='Add Restart arms for the validated pairs in this batch')
     cohort.add_argument('--repeat-from',type=Path,help='Repeat Restart and Rewind twice for each validated frozen endpoint')
+    ap.add_argument('--semantic-candidates',action='store_true',help='Install asynchronous hybrid candidate selection')
     args0=ap.parse_args()
-    if args0.install:install();return
+    if args0.install:install(semantic=args0.semantic_candidates);return
     tasks=list(EXPANSION_TASKS) if args0.expansion else TASKS
     status_path=STATUS.with_name('paper-recovery-expansion-latest.json') if args0.expansion else STATUS
     lock=(BASE/'queue.lock').open('a');fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)

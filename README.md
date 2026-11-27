@@ -29,6 +29,23 @@
 
 从新 clone 可以按文档配置，无需复制原作者的目录。运行还需要 Python 3.12、Docker、模型端点、基准数据和 [原版 runtime ZIP](https://github.com/qwqwqwqwqwqwqwqwqe/jiuwenswarm-rewind-bench/releases/tag/runtime-20261112-173855)。SWE-bench 官方反馈控制器直接启动实验 agent，旧 BenchRunner backend 可选。
 
+## 实验贡献：异步混合回退候选
+
+最近窗口可能被长时间修复中的相似决策占满，让破坏性操作之前的检查点失去可见性。混合策略对**已经录制的 LLM 检查点**建立语义索引。每轮工具执行只要有 Git tree 变化，就将整轮动作和近期验证证据交给后台模型，判断是否开启新的子目标。查询在同一候选预算内优先保留最近 8 个点、受保护的变更和失败编辑、语义段首及段尾。查询最多等待后台约 2 秒，无成功判定时使用最近窗口。
+
+### 同失败起点对照
+
+从归档的失败工作区与上下文启动两种 Rewind 策略，由官方 verifier 验收。每个任务、策略和预算组合运行一次。
+
+| Case | Recent 20 | Hybrid 20 | Recent 40 | Hybrid 40 | Recent 80 | Hybrid 80 |
+|---|---|---|---|---|---|---|
+| Bat | FAIL | PASS | FAIL | PASS | PASS | PASS |
+| Ctags | FAIL | PASS | FAIL | PASS | — | — |
+| Age | FAIL | PASS | FAIL | PASS | FAIL | PASS |
+
+**20 和 40 个候选的定向对照中，混合策略各通过 3/3，最近窗口各通过 0/3。** Age 的 20、40、80 混合臂都选中了默认迁移前的 `rec_000031`，恢复后通过字节保留验收。Ctags 在两档小窗口都回到 `rec_000042`。Bat 的两档混合臂都回到 `rec_000053` 并通过，说明预设目标的可见性和实际选点应分别记录。这些对照支持混合策略在所测归档失败现场的实用性。三道题是定向选取的，独立 76 题三臂结果使用原统计口径。 [逐臂结果](docs/candidate-results.json) · [语义索引实现](bench_tools/jiuwenswarm_runtime/semantic_candidates.py) · [复现步骤](docs/hybrid-candidates.md)
+
+
 ## 目录结构
 
 ```text

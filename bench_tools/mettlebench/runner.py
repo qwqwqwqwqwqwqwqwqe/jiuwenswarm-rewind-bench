@@ -59,6 +59,8 @@ def episode(layout,args,row,strategy,endpoint,network):
             'No task user interaction is available.')
         settings={'episode':eid,'strategy':strategy,'benchmark':'mettlebench','started':start,'deadline':deadline,
             'token_limit':200000,'max_rewinds':6,'prompt':prompt,'workspace':'/testbed','baseline':None,'paired':False}
+        if strategy=='rewind':
+            settings['candidate_policy']=getattr(args,'candidate_policy','recent')
         if recovery_trial:
             from .recovery_experiment import prepare_episode
             settings=prepare_episode(settings,recovery_trial,shared)
@@ -71,7 +73,9 @@ def episode(layout,args,row,strategy,endpoint,network):
             container,'/opt/jws_runtime/bin/python','-B','/feedback-code/feedback_runner/agent_entry.py','/shared/feedback/'+eid+'/settings.json']
         if recovery_trial:
             if settings['paired']:cmd[cmd.index('JWS_PAIRED=0')]='JWS_PAIRED=1'
-            cmd[2:2]=['-e','JWS_PAPER_RECOVERY=1']
+            cmd[2:2]=['-e','JWS_PAPER_RECOVERY=1','-e',f'JWS_CANDIDATE_LIMIT={getattr(args, "candidate_limit", 80)}']
+            if recovery_trial.get('archived_model_defaults'):
+                cmd[2:2]=['-e','JWS_ARCHIVED_MODEL_DEFAULTS=1']
         process=subprocess.Popen(cmd,stdout=stream,stderr=subprocess.STDOUT)
         print('START',task_id,strategy,flush=True)
         restored=set()

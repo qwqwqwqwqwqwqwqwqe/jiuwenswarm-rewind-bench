@@ -80,6 +80,8 @@ async def episode(settings):
                  'request':wire_value(request),'state_dir':str(state),'attempt_dir':str(state/f'attempt-{attempt}'),
                  'data_dir':str(state/'active-data'),'config_file':str(config_file),'workspace':str(workspace),
                  'logical_timestamp':settings['started'],'deadline':deadline,'max_output_tokens':16384,'recovery':recovery}
+            if strategy=='rewind' and settings.get('candidate_policy')=='semantic':
+                job['candidate_policy']='semantic'
             if bootstrap:job['request']=seed['request']
             if seed:job['logical_timestamp']=seed['logical_timestamp']
             final=None

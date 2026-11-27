@@ -28,6 +28,23 @@ This project feeds official benchmark verdicts back to JiuwenSwarm and compares 
 | [Experiments](docs/experiments.en.md) | Three-arm results, matched recovery outcomes, costs, and limitations |
 | [Runtime source snapshot](runtime-source/README.en.md) | Browse all shipped Python source in the experimental distributions |
 
+## Experimental contribution: asynchronous hybrid rewind candidates
+
+A recency window can fill with decisions from a long repair attempt and hide the checkpoint preceding a destructive action. The hybrid policy indexes existing LLM checkpoints. A Git tree change queues the tool round once for background subgoal classification. Candidate selection combines the latest eight checkpoints, protected edits and failed edit attempts, and semantic segment boundaries under the same budget. Queries wait up to about two seconds and fall back to recency when no classification has succeeded.
+
+### Matched recovery from archived failures
+
+Both policies start from the same archived failed workspace and context and use the official verifier. Each task, policy, and budget combination was run once.
+
+| Case | Recent 20 | Hybrid 20 | Recent 40 | Hybrid 40 | Recent 80 | Hybrid 80 |
+|---|---|---|---|---|---|---|
+| Bat | FAIL | PASS | FAIL | PASS | PASS | PASS |
+| Ctags | FAIL | PASS | FAIL | PASS | — | — |
+| Age | FAIL | PASS | FAIL | PASS | FAIL | PASS |
+
+**Hybrid passed 3/3 and recency passed 0/3 at each of the 20- and 40-candidate caps.** For Age, hybrid selected the pre-migration checkpoint `rec_000031` and passed at all three tested caps. Ctags recovered from `rec_000042` at both smaller caps. Bat passed after rewinding to `rec_000053` at both smaller caps, outside the preset target set. These results show the policy helped on the selected archived failures. The independent 76-task comparison is a separate experiment. [Per-arm results](docs/candidate-results.json) · [Semantic index](bench_tools/jiuwenswarm_runtime/semantic_candidates.py) · [Reproduction](docs/hybrid-candidates.md)
+
+
 ## Repository tree
 
 ```text

@@ -1,0 +1,149 @@
+{
+  "design": "One run per task, policy, and budget from an archived failed endpoint",
+  "results": [
+    {
+      "task": "Bat",
+      "candidate_limit": 20,
+      "policy": "recent",
+      "passed": false,
+      "expected_target_visible_on_first_query": false,
+      "rewind_target": null,
+      "terminal_failure_id": "P05_cache_audit_attestation"
+    },
+    {
+      "task": "Bat",
+      "candidate_limit": 20,
+      "policy": "semantic",
+      "passed": true,
+      "expected_target_visible_on_first_query": true,
+      "rewind_target": "rec_000053",
+      "terminal_failure_id": null
+    },
+    {
+      "task": "Bat",
+      "candidate_limit": 40,
+      "policy": "recent",
+      "passed": false,
+      "expected_target_visible_on_first_query": false,
+      "rewind_target": "rec_000093",
+      "terminal_failure_id": "P05_cache_audit_attestation"
+    },
+    {
+      "task": "Bat",
+      "candidate_limit": 40,
+      "policy": "semantic",
+      "passed": true,
+      "expected_target_visible_on_first_query": true,
+      "rewind_target": "rec_000053",
+      "terminal_failure_id": null
+    },
+    {
+      "task": "Ctags",
+      "candidate_limit": 20,
+      "policy": "recent",
+      "passed": false,
+      "expected_target_visible_on_first_query": false,
+      "rewind_target": null,
+      "terminal_failure_id": "P04_golden_baseline_integrity"
+    },
+    {
+      "task": "Ctags",
+      "candidate_limit": 20,
+      "policy": "semantic",
+      "passed": true,
+      "expected_target_visible_on_first_query": true,
+      "rewind_target": "rec_000042",
+      "terminal_failure_id": null
+    },
+    {
+      "task": "Ctags",
+      "candidate_limit": 40,
+      "policy": "recent",
+      "passed": false,
+      "expected_target_visible_on_first_query": false,
+      "rewind_target": "rec_000059",
+      "terminal_failure_id": "P04_golden_baseline_integrity"
+    },
+    {
+      "task": "Ctags",
+      "candidate_limit": 40,
+      "policy": "semantic",
+      "passed": true,
+      "expected_target_visible_on_first_query": true,
+      "rewind_target": "rec_000042",
+      "terminal_failure_id": null
+    },
+    {
+      "task": "Age",
+      "candidate_limit": 20,
+      "policy": "recent",
+      "passed": false,
+      "expected_target_visible_on_first_query": false,
+      "rewind_target": "rec_000305",
+      "terminal_failure_id": "P08_armor_whitespace_preserved"
+    },
+    {
+      "task": "Age",
+      "candidate_limit": 20,
+      "policy": "semantic",
+      "passed": true,
+      "expected_target_visible_on_first_query": true,
+      "rewind_target": "rec_000031",
+      "terminal_failure_id": null
+    },
+    {
+      "task": "Age",
+      "candidate_limit": 40,
+      "policy": "recent",
+      "passed": false,
+      "expected_target_visible_on_first_query": false,
+      "rewind_target": "rec_000265",
+      "terminal_failure_id": "P08_armor_whitespace_preserved"
+    },
+    {
+      "task": "Age",
+      "candidate_limit": 40,
+      "policy": "semantic",
+      "passed": true,
+      "expected_target_visible_on_first_query": true,
+      "rewind_target": "rec_000031",
+      "terminal_failure_id": null
+    },
+    {
+      "task": "Bat",
+      "candidate_limit": 80,
+      "policy": "recent",
+      "passed": true,
+      "expected_target_visible_on_first_query": true,
+      "rewind_target": "rec_000041",
+      "terminal_failure_id": null
+    },
+    {
+      "task": "Bat",
+      "candidate_limit": 80,
+      "policy": "semantic",
+      "passed": true,
+      "expected_target_visible_on_first_query": true,
+      "rewind_target": "rec_000055",
+      "terminal_failure_id": null
+    },
+    {
+      "task": "Age",
+      "candidate_limit": 80,
+      "policy": "recent",
+      "passed": false,
+      "expected_target_visible_on_first_query": false,
+      "rewind_target": null,
+      "terminal_failure_id": "P08_armor_whitespace_preserved"
+    },
+    {
+      "task": "Age",
+      "candidate_limit": 80,
+      "policy": "semantic",
+      "passed": true,
+      "expected_target_visible_on_first_query": true,
+      "rewind_target": "rec_000031",
+      "terminal_failure_id": null
+    }
+  ]
+}
