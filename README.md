@@ -19,13 +19,17 @@
 
 将官方验收反馈接入 JiuwenSwarm，对比 Continue 原地修复、Restart 带失败反馈重启和 Rewind 检查点回退。SWE-bench 验收 Git 补丁，MettleBench 验收完整任务工作区。
 
-| 文档 | 内容 |
-|---|---|
-| [环境配置与复现](docs/setup.md) | 从干净 clone 安装 runtime、配置模型、获取两套 benchmark 的镜像 |
-| [JiuwenSwarm 集成与源码](docs/jiuwenswarm.md) | 解压源码、原版 ZIP、版本、许可证和旧 driver |
-| [回退机制](docs/rewind.md) | 检查点、历史重放、恢复边界与审计 |
-| [接入自己的 agent](docs/custom-agent.md) | 独立评分、在线反馈与原生回退需要的适配 |
-| [实验报告](docs/experiments.md) | 三臂结果、同失败终点配对、重复实验与局限 |
+## 文档目录
+
+| 文档 | 内容 | 英文版 |
+|---|---|---|
+| [环境配置与复现](docs/setup.md) | 配置 Linux/WSL、运行时、模型端点、基准数据和镜像 | [English](docs/setup.en.md) |
+| [JiuwenSwarm 集成架构](docs/jiuwenswarm.md) | 组件关系、执行顺序、版本、许可证与旧 driver | [English](docs/jiuwenswarm.en.md) |
+| [回退机制](docs/rewind.md) | 检查点录制、历史重放、文件与上下文恢复、审计 | [English](docs/rewind.en.md) |
+| [混合候选策略](docs/hybrid-candidates.md) | 工具轮次聚合、异步语义分段、候选排序与 20/40/80 对照复现 | [English](docs/hybrid-candidates.en.md) |
+| [接入自己的 agent](docs/custom-agent.md) | 独立评分、执行中反馈与原生回退的接入方式 | [English](docs/custom-agent.en.md) |
+| [实验报告](docs/experiments.md) | 三臂结果、同失败终点对照、重复实验、成本与局限 | [English](docs/experiments.en.md) |
+| [运行时源码快照](runtime-source/README.md) | 发布包内的 Python 源码、目录和版本来源 | [English](runtime-source/README.en.md) |
 
 从新 clone 可以按文档配置，无需复制原作者的目录。运行还需要 Python 3.12、Docker、模型端点、基准数据和 [原版 runtime ZIP](https://github.com/qwqwqwqwqwqwqwqwqe/jiuwenswarm-rewind-bench/releases/tag/runtime-20261112-173855)。SWE-bench 官方反馈控制器直接启动实验 agent，旧 BenchRunner backend 可选。
 

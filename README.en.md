@@ -19,14 +19,17 @@
 
 This project feeds official benchmark verdicts back to JiuwenSwarm and compares three response strategies: Continue repairs in place, Restart starts over with failure feedback, and Rewind restores an earlier decision point. SWE-bench evaluates a Git patch; MettleBench evaluates the submitted workspace.
 
-| Guide | Contents |
-|---|---|
-| [Setup and reproduction](docs/setup.en.md) | Linux/WSL, runtime installation, model credentials, data, and images |
-| [JiuwenSwarm architecture and source](docs/jiuwenswarm.en.md) | Component diagrams, execution sequence, versions, and licensing |
-| [Rewind mechanics](docs/rewind.en.md) | Checkpoints, replay, recovery boundaries, and auditing |
-| [Use your own agent](docs/custom-agent.en.md) | Independent scoring, feedback, and recovery integration |
-| [Experiments](docs/experiments.en.md) | Three-arm results, matched recovery outcomes, costs, and limitations |
-| [Runtime source snapshot](runtime-source/README.en.md) | Browse all shipped Python source in the experimental distributions |
+## Documentation
+
+| Guide | Contents | Chinese |
+|---|---|---|
+| [Setup and reproduction](docs/setup.en.md) | Configure Linux/WSL, the runtime, model endpoint, benchmark data, and images | [中文](docs/setup.md) |
+| [JiuwenSwarm integration architecture](docs/jiuwenswarm.en.md) | Components, execution sequence, versions, licensing, and the legacy driver | [中文](docs/jiuwenswarm.md) |
+| [Rewind mechanics](docs/rewind.en.md) | Checkpoint recording, replay, workspace and context recovery, and auditing | [中文](docs/rewind.md) |
+| [Hybrid candidate policy](docs/hybrid-candidates.en.md) | Tool-round grouping, asynchronous semantic segmentation, candidate ranking, and the 20/40/80 comparisons | [中文](docs/hybrid-candidates.md) |
+| [Use your own agent](docs/custom-agent.en.md) | Integrate independent scoring, in-run feedback, and native rewind | [中文](docs/custom-agent.md) |
+| [Experiments](docs/experiments.en.md) | Three-arm results, matched failure endpoints, repeated runs, costs, and limitations | [中文](docs/experiments.md) |
+| [Runtime source snapshot](runtime-source/README.en.md) | Shipped Python source, package layout, and version provenance | [中文](runtime-source/README.md) |
 
 ## Experimental contribution: asynchronous hybrid rewind candidates
 
@@ -42,7 +45,7 @@ Both policies start from the same archived failed workspace and context and use 
 | Ctags | FAIL | PASS | FAIL | PASS | — | — |
 | Age | FAIL | PASS | FAIL | PASS | FAIL | PASS |
 
-**Hybrid passed 3/3 and recency passed 0/3 at each of the 20- and 40-candidate caps.** For Age, hybrid selected the pre-migration checkpoint `rec_000031` and passed at all three tested caps. Ctags recovered from `rec_000042` at both smaller caps. Bat passed after rewinding to `rec_000053` at both smaller caps, outside the preset target set. These results show the policy helped on the selected archived failures. The independent 76-task comparison is a separate experiment. [Per-arm results](docs/candidate-results.json) · [Semantic index](bench_tools/jiuwenswarm_runtime/semantic_candidates.py) · [Reproduction](docs/hybrid-candidates.md)
+**Hybrid passed 3/3 and recency passed 0/3 at each of the 20- and 40-candidate caps.** For Age, hybrid selected the pre-migration checkpoint `rec_000031` and passed at all three tested caps. Ctags recovered from `rec_000042` at both smaller caps. Bat passed after rewinding to `rec_000053` at both smaller caps, outside the preset target set. These results show the policy helped on the selected archived failures. The independent 76-task comparison is a separate experiment. [Per-arm results](docs/candidate-results.json) · [Semantic index](bench_tools/jiuwenswarm_runtime/semantic_candidates.py) · [Design and reproduction](docs/hybrid-candidates.en.md)
 
 
 ## Repository tree
